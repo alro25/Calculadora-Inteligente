@@ -1,7 +1,10 @@
 function validarNumero(valor) {
     if (!valor) return null;
     valor = valor.toString().replace(',', '.');
-    if (!/^\d*\.?\d+$/.test(valor) || parseFloat(valor) <= 0) {
+    
+    // Regex ajustada para não aceitar "." ou "," no início.
+    // Exige pelo menos um dígito antes do ponto.
+    if (!/^\d+\.?\d*$/.test(valor) || parseFloat(valor) <= 0) {
         return null;
     }
     return parseFloat(valor);
@@ -81,32 +84,33 @@ function calcularCombustivel() {
     exibirResultado(`<strong>Menor valor pesquisado: R$ ${menorValorPesquisado.toFixed(2)}</strong>`);
     exibirResultado(`<strong>Média dos preços pesquisados: R$ ${media.toFixed(2)}</strong>`);
 
-const gastoDiario = 2 * (consumoNecessario * menorValorPesquisado);
-exibirResultado(`<strong>Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}</strong>`);
+    const gastoDiario = 2 * (consumoNecessario * menorValorPesquisado);
+    exibirResultado(`<strong>Gasto diário (ida e volta): R$ ${gastoDiario.toFixed(2)}</strong>`);
 
-// Atualização do botão
-const botao = document.getElementById('startButton');
+    // Atualização do botão
+    const botao = document.getElementById('startButton');
 
-// 1. Remove todos os eventos existentes
-botao.replaceWith(botao.cloneNode(true));
-const novoBotao = document.getElementById('startButton');
+    // 1. Remove todos os eventos existentes
+    botao.replaceWith(botao.cloneNode(true));
+    const novoBotao = document.getElementById('startButton');
 
-// 2. Aplica o estilo de concluído
-novoBotao.innerHTML = '<span class="button-content">Concluído <i class="fas fa-check"></i></span>';
-novoBotao.className = 'action-button concluido';
+    // 2. Aplica o estilo de concluído
+    novoBotao.innerHTML = '<span class="button-content">Concluído <i class="fas fa-check"></i></span>';
+    novoBotao.className = 'action-button concluido';
 
-// 3. Adiciona o evento de reset
-novoBotao.onclick = function() {
-    // Efeito visual suave
-    this.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        // Restaura a tela inicial
-        document.getElementById('resultados').innerHTML = '';
-        this.innerHTML = 'Iniciar Cálculo';
-        this.className = 'action-button';
-        this.style.transform = '';
-        this.onclick = calcularCombustivel;
-    }, 200);
+    // 3. Adiciona o evento de reset
+    novoBotao.onclick = function() {
+        // Efeito visual suave
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            // Restaura a tela inicial
+            document.getElementById('resultados').innerHTML = '';
+            this.innerHTML = 'Iniciar Cálculo';
+            this.className = 'action-button';
+            this.style.transform = '';
+            this.onclick = calcularCombustivel;
+        }, 200);
+    };
 };
-};
+
 document.getElementById('startButton').addEventListener('click', calcularCombustivel);
